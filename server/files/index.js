@@ -19,25 +19,26 @@ function formatRuntime(runtime) {
 }
 
 function appendMovie(movie, element) {
+  
   new ElementBuilder("article").id(movie.imdbID)
-          .append(new ElementBuilder("img").with("src", movie.Poster))
-          .append(new ElementBuilder("h1").text(movie.Title))
+          .append(new ElementBuilder("img").with("src", movie.poster))
+          .append(new ElementBuilder("h1").text(movie.title))  
           .append(new ElementBuilder("p")
               .append(new ElementBuilder("button").text("Edit")
                     .listener("click", () => location.href = "edit.html?imdbID=" + movie.imdbID)))
           .append(new ParagraphBuilder().items(
-              "Runtime " + formatRuntime(movie.Runtime),
+              "Runtime " + formatRuntime(movie.runtime),
               "\u2022",
               "Released on " +
-                new Date(movie.Released).toLocaleDateString("en-US")))
-          .append(new ParagraphBuilder().childClass("genre").items(movie.Genres))
-          .append(new ElementBuilder("p").text(movie.Plot))
-          .append(new ElementBuilder("h2").pluralizedText("Director", movie.Directors))
-          .append(new ListBuilder().items(movie.Directors))
-          .append(new ElementBuilder("h2").pluralizedText("Writer", movie.Writers))
-          .append(new ListBuilder().items(movie.Writers))
-          .append(new ElementBuilder("h2").pluralizedText("Actor", movie.Actors))
-          .append(new ListBuilder().items(movie.Actors))
+                new Date(movie.released).toLocaleDateString("en-US")))
+          .append(new ParagraphBuilder().childClass("genre").items(movie.genres))
+          .append(new ElementBuilder("p").text(movie.plot))
+          .append(new ElementBuilder("h2").pluralizedText("Director", movie.directors))
+          .append(new ListBuilder().items(movie.directors))
+          .append(new ElementBuilder("h2").pluralizedText("Writer", movie.writers ))
+          .append(new ListBuilder().items(movie.writers))
+          .append(new ElementBuilder("h2").pluralizedText("Actor", movie.actors ))
+          .append(new ListBuilder().items(movie.actors))
           .appendTo(element);
 }
 
@@ -62,31 +63,47 @@ function loadMovies(genre) {
 
   const url = new URL("/movies", location.href)
   /* Task 1.4. Add query parameter to the url if a genre is given */
-
-  xhr.open("GET", url)
-  xhr.send()
+if (genre) {
+  url.searchParams.set("genre", genre);
+}
+  xhr.open("GET", url);
+  xhr.send();
 }
 
 window.onload = function () {
   const xhr = new XMLHttpRequest();
   xhr.onload = function () {
-    const listElement = document.querySelector("nav>ul");
-
+const nav = document.querySelector("nav");
     if (xhr.status === 200) {
       /* Task 1.3. Add the genre buttons to the listElement and 
          initialize them with a click handler that calls the 
          loadMovies(...) function above. */
-      const genres = JSON.parse(xhr.responseText);
+          const genres = JSON.parse(xhr.responseText);
+    nav.innerHTML = "";
 
-      /* When a first button exists, we click it to load all movies. */
+      const allButton = document.createElement("button");
+      allButton.textContent = "All";
+      allButton.addEventListener("click", () => loadMovies());
+      nav.append(allButton);
+
+      genres.forEach((genre) => {
+        const button = document.createElement("button");
+        button.textContent = genre;
+        button.addEventListener("click", () => loadMovies(genre));
+        nav.append(button);
+      });
+
       const firstButton = document.querySelector("nav button");
       if (firstButton) {
         firstButton.click();
       }
     } else {
-      document.querySelector("body").append(`Daten konnten nicht geladen werden, Status ${xhr.status} - ${xhr.statusText}`);
+      document.body.append(`Daten konnten nicht geladen werden, Status ${xhr.status}`);
     }
   };
+
   xhr.open("GET", "/genres");
   xhr.send();
 };
+
+
