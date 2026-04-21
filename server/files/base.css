@@ -1,6 +1,6 @@
 body {
   font-family: "Trebuchet MS", sans-serif;
-  background-color: brown;
+  background-color: rgb(250, 171, 217);
   color: beige;
 }
 
@@ -16,5 +16,5 @@ button {
 }
 
 button:hover {
-  background-color: darkgray;
+  background-color: rgb(255, 13, 150);
 }

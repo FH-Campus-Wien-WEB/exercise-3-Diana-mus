@@ -19,27 +19,32 @@ function formatRuntime(runtime) {
 }
 
 function appendMovie(movie, element) {
-  
   new ElementBuilder("article").id(movie.imdbID)
-          .append(new ElementBuilder("img").with("src", movie.poster))
-          .append(new ElementBuilder("h1").text(movie.title))  
-          .append(new ElementBuilder("p")
-              .append(new ElementBuilder("button").text("Edit")
-                    .listener("click", () => location.href = "edit.html?imdbID=" + movie.imdbID)))
-          .append(new ParagraphBuilder().items(
-              "Runtime " + formatRuntime(movie.runtime),
-              "\u2022",
-              "Released on " +
-                new Date(movie.released).toLocaleDateString("en-US")))
-          .append(new ParagraphBuilder().childClass("genre").items(movie.genres))
-          .append(new ElementBuilder("p").text(movie.plot))
-          .append(new ElementBuilder("h2").pluralizedText("Director", movie.directors))
-          .append(new ListBuilder().items(movie.directors))
-          .append(new ElementBuilder("h2").pluralizedText("Writer", movie.writers ))
-          .append(new ListBuilder().items(movie.writers))
-          .append(new ElementBuilder("h2").pluralizedText("Actor", movie.actors ))
-          .append(new ListBuilder().items(movie.actors))
-          .appendTo(element);
+    .append(new ElementBuilder("img").with("src", movie.poster || ""))
+    .append(new ElementBuilder("h1").text(movie.title || "No title"))
+    .append(
+      new ElementBuilder("p").append(
+        new ElementBuilder("button")
+          .text("Edit")
+          .listener("click", () => location.href = "edit.html?imdbID=" + movie.imdbID)
+      )
+    )
+    .append(
+      new ParagraphBuilder().items(
+        "Runtime " + formatRuntime(movie.runtime || 0),
+        "\u2022",
+        "Released on " + new Date(movie.released).toLocaleDateString("en-US")
+      )
+    )
+    .append(new ParagraphBuilder().childClass("genre").items(movie.genres || []))
+    .append(new ElementBuilder("p").text(movie.plot || ""))
+    .append(new ElementBuilder("h2").pluralizedText("Director", movie.directors || []))
+    .append(new ListBuilder().items(movie.directors || []))
+    .append(new ElementBuilder("h2").pluralizedText("Writer", movie.writers || []))
+    .append(new ListBuilder().items(movie.writers || []))
+    .append(new ElementBuilder("h2").pluralizedText("Actor", movie.actors || []))
+    .append(new ListBuilder().items(movie.actors || []))
+    .appendTo(element);
 }
 
 function loadMovies(genre) {
@@ -53,6 +58,7 @@ function loadMovies(genre) {
 
     if (xhr.status === 200) {
       const movies = JSON.parse(xhr.responseText)
+    
       for (const movie of movies) {
         appendMovie(movie, mainElement)
       }

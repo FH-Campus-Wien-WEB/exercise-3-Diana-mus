@@ -1,32 +1,33 @@
 function setMovie(movie) {
-
   for (const element of document.forms[0].elements) {
     const name = element.id;
+    if (!name) continue;
+
     const value = movie[name];
-    
-    if (name === "Genres") {
+
+    if (name === "genres") {
       const options = element.options;
       for (let index = 0; index < options.length; index++) {
         const option = options[index];
-        option.selected = value.indexOf(option.value) >= 0;
+        option.selected = value ? value.indexOf(option.value) >= 0 : false;
       }
+    } else if (Array.isArray(value)) {
+      element.value = value.join(", ");
     } else {
-      element.value = value;
+      element.value = value ?? "";
     }
   }
 }
 
 function getMovie() {
   const movie = {};
-
-  const elements = Array.from(document.forms[0].elements).filter(element => element.id)
+  const elements = Array.from(document.forms[0].elements).filter(element => element.id);
 
   for (const element of elements) {
     const name = element.id;
-
     let value;
 
-    if (name === "Genres") {
+    if (name === "genres") {
       value = [];
       const options = element.options;
       for (let index = 0; index < options.length; index++) {
@@ -35,10 +36,13 @@ function getMovie() {
           value.push(option.value);
         }
       }
-    } else if (name === "Metascore" || name === "Runtime" || name === "imdbRating") {
-        value = Number(element.value);
-    } else if (name === "Actors" || name === "Directors" || name === "Writers") {
-      value = element.value.split(",").map((item) => item.trim());
+    } else if (name === "metascore" || name === "runtime" || name === "imdbRating") {
+      value = Number(element.value);
+    } else if (name === "actors" || name === "directors" || name === "writers") {
+      value = element.value
+        .split(",")
+        .map(item => item.trim())
+        .filter(item => item !== "");
     } else {
       value = element.value;
     }
@@ -52,23 +56,20 @@ function getMovie() {
 function putMovie() {
   const movie = getMovie();
 
-  const xhr = new XMLHttpRequest()
+  const xhr = new XMLHttpRequest();
   xhr.onload = function() {
-    if (xhr.status == 200 || xhr.status === 204) {
-      location.href = 'index.html'
+    if (xhr.status === 200 || xhr.status === 201 || xhr.status === 204) {
+      location.href = "index.html";
     } else {
-      alert("Saving of movie data failed. Status code was " + response.status)
+      alert("Saving of movie data failed. Status code was " + xhr.status);
     }
-  }
-  
-  xhr.open("PUT", "/movies/" + movie.imdbID)
-  xhr.setRequestHeader("Content-Type", "application/json")
+  };
 
-  xhr.send(JSON.stringify(movie))
-
+  xhr.open("PUT", "/movies/" + movie.imdbID);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.send(JSON.stringify(movie));
 }
 
-/** Loading and setting the movie data for the movie with the passed imdbID */
 const imdbID = new URLSearchParams(window.location.search).get("imdbID");
 
 const xhr = new XMLHttpRequest();
@@ -78,7 +79,7 @@ xhr.onload = function() {
     setMovie(JSON.parse(xhr.responseText));
   } else {
     alert("Loading of movie data failed. Status was " + xhr.status + " - " + xhr.statusText);
-  } 
-}
+  }
+};
 
-xhr.send()
+xhr.send();

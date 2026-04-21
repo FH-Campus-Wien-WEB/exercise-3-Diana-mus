@@ -26,7 +26,7 @@ module.exports = {
   writers: ["Scott Neustadter", "Michael H. Weber"],
   actors: ["Shailene Woodley", "Ansel Elgort"],
   plot: "Two teenage cancer patients begin a life-affirming journey to visit a reclusive author in Amsterdam.",
-  poster: "https://image.tmdb.org/t/p/w1280/zF3nrbvnWkCi5OOPIEpnYxQvSdU.jpgs",
+  poster: "https://image.tmdb.org/t/p/w1280/zF3nrbvnWkCi5OOPIEpnYxQvSdU.jpg",
   metascore: 69,
   imdbRating: 7.7
 },

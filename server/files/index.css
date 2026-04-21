@@ -1,1 +1,132 @@
+@import url(base.css);
 
+h1 {
+  font-size: 200%;
+  margin: 8px 0px;
+}
+
+/* Constrain the page to the viewport */
+html,
+body {
+  height: 100vh;
+  margin: 0;
+}
+
+/* Task 2.1. Mobile-first layout */
+body {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto 1fr auto;
+  grid-template-areas:
+    "h"
+    "n"
+    "m"
+    "f";
+}
+
+header {
+  grid-area: h;
+}
+
+nav {
+  grid-area: n;
+}
+
+main {
+  grid-area: m;
+  overflow-y: auto;
+}
+
+footer {
+  grid-area: f;
+}
+
+/* Desktop layout */
+@media (min-width: 768px) {
+  body {
+    grid-template-columns: 220px 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "h h"
+      "n m"
+      "f f";
+  }
+}
+
+/* Task 3.1. Make the header element a flex container and center its children */
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Navigation area */
+nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+}
+
+/* navigation buttons have full width */
+nav button {
+  width: 100%;
+  padding: 10px;
+}
+
+/* Task 3.3. Make the main element a Flexbox container */
+main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-content: flex-start;
+  padding: 12px;
+}
+
+/* Task 3.4. Make the footer's ul a Flexbox container */
+footer ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Remove unnecessary space and bullets from the lists */
+ul {
+  padding: 0px;
+  margin: 16px;
+  list-style-type: none;
+}
+
+/* From here on styling from exercise 1 */
+img {
+  border-radius: 12px;
+  width: 100%;
+  height: auto;
+}
+
+article {
+  background-color: lightgray;
+  border-radius: 16px;
+  padding: 16px;
+  width: 384px;
+  margin: 8px;
+  box-sizing: border-box;
+}
+
+a {
+  color: beige;
+}
+
+span {
+  margin-right: 4px;
+}
+
+.genre {
+  padding: 4px 8px;
+  border: solid black 1px;
+  border-radius: 6px;
+  background-color: darkgray;
+  font-weight: bold;
+}
